@@ -21,6 +21,7 @@ type WebWatcher struct {
 	Url       string
 	CharSet   string
 	ElementAt string
+	Attribute string
 	SlackUrl  string
 }
 
@@ -30,11 +31,12 @@ func (_ WebWatcherFactory) Create() *WebWatcher {
 	url := flag.String("t", "", "target url")
 	tCharset := flag.String("c", "utf-8", "target charset")
 	elementAt := flag.String("e", "", "target element")
+	attribute := flag.String("a", "text", "target attribute")
 	slackUrl := flag.String("p", "", "slack incoming hook url")
 	duration := flag.Int("s", 10, "access duration[second]")
 	flag.Parse()
 
-	return &WebWatcher{Url: *url, CharSet: *tCharset, ElementAt: *elementAt, Duration: time.Duration(*duration) * time.Second, SlackUrl: *slackUrl}
+	return &WebWatcher{Url: *url, CharSet: *tCharset, ElementAt: *elementAt, Attribute: *attribute, Duration: time.Duration(*duration) * time.Second, SlackUrl: *slackUrl}
 }
 
 func (ww WebWatcher) ErrFilter(v interface{}) bool {
@@ -71,7 +73,15 @@ func (ww WebWatcher) Scrape() func(interface{}) interface{} {
 	return func(v interface{}) interface{} {
 		doc := v.(*goquery.Document)
 		latest := doc.Find(ww.ElementAt).Map(func(_ int, s *goquery.Selection) string {
-			return s.Text()
+			if ww.Attribute == "text" {
+				return s.Text()
+			}
+
+			res, ok := s.Attr(ww.Attribute)
+			if !ok {
+				return ""
+			}
+			return res
 		})
 
 		updated := util.Diff(before, latest)
