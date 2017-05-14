@@ -6,8 +6,8 @@ ReactiveXのGo版である、[RxGo](https://github.com/ReactiveX/RxGo)を使っ�
 
 | メイン| 概要 |
 |---|---|
-| [csv_parser](./#csv_parser) | 入力csvの指定したカラムのみ標準出力に出力する |
-| [web_watcher](./#web_watcher) | 指定URLの指定要素を定期的に監視して、更新分をslackに通知する |
+| [csv_parser](https://github.com/ngiyshhk/rxgo-examples#csv_parser) | 入力csvの指定したカラムのみ標準出力に出力する |
+| [web_watcher](https://github.com/ngiyshhk/rxgo-examples#web_watcher) | 指定URLの指定要素を定期的に監視して、更新分をslackに通知する |
 
 ## csv_parser
 ### 概要
